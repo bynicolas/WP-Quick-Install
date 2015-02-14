@@ -57,6 +57,30 @@ if ( isset( $_GET['action'] ) ) {
 			/*--------------------------*/
 
 			// DB Test
+			// Create database if it doesn't exist
+			try {
+				$db = new PDO('mysql:host='. $_POST['dbhost'], $_POST['uname'], $_POST['pwd']);				
+				$db->exec("CREATE DATABASE IF NOT EXISTS ". $_POST['dbname'] .";
+								GRANT ALL ON ". $_POST['dbname'] .".* TO '". $_POST['uname'] ."'@'". $_POST['dbhost'] ."';
+				                FLUSH PRIVILEGES;");
+			}
+			catch (Exception $e) {
+				$data['db'] = "error creating database";
+			}
+			
+			// Check on the wp_users table if it exists
+			try {
+				$db = new PDO('mysql:host='. $_POST['dbhost'] .';dbname=' . $_POST['dbname'] , $_POST['uname'], $_POST['pwd'] );
+				// if SELECT returns a number, it exists
+				if( gettype( $db->exec( "SELECT count(*) FROM " . $_POST[ 'prefix' ] . "users" ) ) == 'integer' ) {
+					throw new Exception();
+			   	}
+			}
+			catch (Exception $e) {
+				$data['db'] = "database not empty";
+			}
+			
+			
 			try {
 			   $db = new PDO('mysql:host='. $_POST['dbhost'] .';dbname=' . $_POST['dbname'] , $_POST['uname'], $_POST['pwd'] );
 			}

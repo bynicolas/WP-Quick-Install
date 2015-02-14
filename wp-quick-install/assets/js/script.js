@@ -253,6 +253,16 @@ $(document).ready(function() {
 				errors = false;
 				data = $.parseJSON(data);
 
+				if ( data.db == "database not empty" ) {
+					errors = true;
+					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; Warning, Database Is Not Empty. Use a New Database Name or a Different Prefix.</p>');
+				}
+				
+				if ( data.db == "error creating database" ) {
+					errors = true;
+					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; Could Not Create Database. Check Your Connection Credentials and Make Sure Your Users Has Permission to Create New Databases.</p>');
+				}
+
 				if ( data.db == "error etablishing connection" ) {
 					errors = true;
 					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; Error Establishing a Database Connection.</p>');
@@ -260,7 +270,7 @@ $(document).ready(function() {
 
 				if ( data.wp == "error directory" ) {
 					errors = true;
-					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; WordPress seems to be Already Installed.</p>');
+					$('#errors').show().append('<p style="margin-bottom:0px;">&bull; WordPress Seems to Be Already Installed in This Folder.</p>');
 				}
 
 				if ( ! errors ) {
